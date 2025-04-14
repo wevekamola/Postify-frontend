@@ -19,9 +19,11 @@ import PostForm from "../components/PostForm";
 export default function PostsPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const rows = useSelector(selectPostList);
   const loading = useSelector(selectPostLoading);
   const deletedId = useSelector(selectDeletedId);
+
+  const allPosts = useSelector(selectPostList);
+  const users = useSelector((state) => state.auth.users);
 
   const [open, setOpen] = React.useState(false);
   const [snackbarOpen, setSnackbarOpen] = React.useState(false);
@@ -41,10 +43,20 @@ export default function PostsPage() {
     dispatch(clearDeletedId());
   };
 
+  const rows = allPosts.map((post) => {
+    const user = users.find((u) => u.id === post.userId);
+    return {
+      ...post,
+      userName: user?.name || "N/A",
+      userEmail: user?.email || "N/A",
+    };
+  });
+
   const columns = [
     { field: "id", headerName: "ID", width: 90 },
-    { field: "title", headerName: "Title", width: 300 },
-    { field: "body", headerName: "Body", width: 500 },
+    { field: "userName", headerName: "User Name", width: 200 },
+    { field: "userEmail", headerName: "User Email", width: 250 },
+    { field: "body", headerName: "Post", width: 500 },
     {
       field: "actions",
       headerName: "Actions",
@@ -85,7 +97,7 @@ export default function PostsPage() {
       <PostForm open={open} handleClose={() => setOpen(false)} />
 
       <Typography variant="h4" gutterBottom>
-        Posts
+        All Posts
       </Typography>
 
       <div style={{ height: 500, width: "100%" }}>
