@@ -12,12 +12,22 @@ import {
   fetchUsersStart,
   loginStart,
 } from "../Reducers/auth.reducer";
+import { useNavigate } from "react-router-dom";
 
 export default function LoginPage() {
   const dispatch = useDispatch();
-  const { loading, error } = useSelector((state) => state.auth);
+  const { loading, error, currentUser } = useSelector((state) => state.auth);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+
+const navigate = useNavigate();
+
+useEffect(() => {
+    if (currentUser) {
+      navigate("/posts");
+    }
+  }, [currentUser, navigate]);
 
   useEffect(() => {
     dispatch(fetchUsersStart());
