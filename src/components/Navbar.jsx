@@ -27,7 +27,7 @@ export default function Navbar() {
 
         {currentUser && (
           <Box display="flex" gap={2}>
-            <Button color="inherit" onClick={() => alert("My Post page not implemented")}>
+            <Button color="inherit" onClick={() => navigate("/myposts")}>
               My Posts
             </Button>
             <Button color="inherit" onClick={() => alert("Profile page not implemented")}>
