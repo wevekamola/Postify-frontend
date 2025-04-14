@@ -30,7 +30,7 @@ export default function Navbar() {
             <Button color="inherit" onClick={() => navigate("/myposts")}>
               My Posts
             </Button>
-            <Button color="inherit" onClick={() => alert("Profile page not implemented")}>
+            <Button color="inherit" onClick={() => navigate("/myprofile")}>
               My Profile
             </Button>
             <Button color="inherit" onClick={handleLogout}>

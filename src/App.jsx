@@ -7,6 +7,7 @@ import MyPostsPage from "./pages/MyPostsPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import GuestRoute from "./components/GuestRoute";
 import Navbar from "./components/Navbar";
+import MyProfilePage from "./pages/MyProfilePage";
 
 function App() {
   return (
@@ -42,6 +43,14 @@ function App() {
           element={
             <ProtectedRoute>
               <MyPostsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/myprofile"
+          element={
+            <ProtectedRoute>
+              <MyProfilePage />
             </ProtectedRoute>
           }
         />
