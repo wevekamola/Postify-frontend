@@ -27,6 +27,9 @@ export default function Navbar() {
 
         {currentUser && (
           <Box display="flex" gap={2}>
+            <Button color="inherit" onClick={() => navigate("/")}>
+              All Posts
+            </Button>
             <Button color="inherit" onClick={() => navigate("/myposts")}>
               My Posts
             </Button>

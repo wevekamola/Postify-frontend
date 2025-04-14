@@ -64,7 +64,7 @@ export default function MyPostsPage() {
             onClick={() => navigate(`/posts/${params.row.id}`)}
             sx={{ mr: 1 }}
           >
-            View
+            Edit
           </Button>
           <Button
             variant="outlined"
