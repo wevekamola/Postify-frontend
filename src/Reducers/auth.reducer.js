@@ -7,16 +7,12 @@ const initialState = {
   currentUser: storedUser ? JSON.parse(storedUser) : null,
   loading: false,
   error: null,
-  isInitialized: false,
 };
 
 const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    setInitialized(state) {
-        state.isInitialized = true;
-    },
     fetchUsersStart(state) {
       state.loading = true;
     },
@@ -40,7 +36,6 @@ const authSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     },
-    
     logout(state) {
       state.currentUser = null;
       localStorage.removeItem("user");
@@ -49,7 +44,6 @@ const authSlice = createSlice({
 });
 
 export const {
-  setInitialized,
   fetchUsersStart,
   fetchUsersSuccess,
   fetchUsersFailure,

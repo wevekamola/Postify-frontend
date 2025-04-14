@@ -5,10 +5,12 @@ import PostDetailsPage from "./pages/PostDetailsPage";
 import LoginPage from "./pages/LoginPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import GuestRoute from "./components/GuestRoute";
+import Navbar from "./components/Navbar";
 
 function App() {
   return (
     <BrowserRouter>
+        <Navbar />
         <Routes>
           <Route
             path="/"
