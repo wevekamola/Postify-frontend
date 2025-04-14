@@ -1,6 +1,10 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchPostsStart } from "../Reducers/post.reducer";
+import {
+  fetchPostsStart,
+  deletePostStart,
+  clearDeletedId,
+} from "../Reducers/post.reducer";
 import {
   selectPostList,
   selectPostLoading,
@@ -17,12 +21,15 @@ export default function PostsPage() {
   const navigate = useNavigate();
   const rows = useSelector(selectPostList);
   const loading = useSelector(selectPostLoading);
-  const deletedId = useSelector(selectDeletedId); // ✅ from Redux
+  const deletedId = useSelector(selectDeletedId);
 
   const [open, setOpen] = React.useState(false);
   const [snackbarOpen, setSnackbarOpen] = React.useState(false);
 
-  // ✅ Show snackbar when deletedId changes
+  useEffect(() => {
+    dispatch(fetchPostsStart());
+  }, [dispatch]);
+
   useEffect(() => {
     if (deletedId !== null) {
       setSnackbarOpen(true);
@@ -31,7 +38,7 @@ export default function PostsPage() {
 
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
-    dispatch({ type: "CLEAR_DELETED_ID" }); // ✅ clear after showing
+    dispatch(clearDeletedId());
   };
 
   const columns = [
@@ -56,9 +63,7 @@ export default function PostsPage() {
             variant="outlined"
             color="error"
             size="small"
-            onClick={() =>
-              dispatch({ type: "DELETE_POST_START", payload: params.row.id })
-            }
+            onClick={() => dispatch(deletePostStart(params.row.id))}
           >
             Delete
           </Button>
@@ -66,10 +71,6 @@ export default function PostsPage() {
       ),
     },
   ];
-
-  useEffect(() => {
-    dispatch(fetchPostsStart());
-  }, [dispatch]);
 
   return (
     <Container>
@@ -98,7 +99,6 @@ export default function PostsPage() {
         />
       </div>
 
-      {/* ✅ Snackbar */}
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={3000}

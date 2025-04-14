@@ -8,7 +8,7 @@ import {
   TextField,
 } from "@mui/material";
 import { useDispatch } from "react-redux";
-import { CREATE_POST_START } from "../Reducers/post.reducer";
+import { createPostStart } from "../Reducers/post.reducer";
 
 export default function PostForm({ open, handleClose }) {
   const dispatch = useDispatch();
@@ -17,10 +17,7 @@ export default function PostForm({ open, handleClose }) {
 
   const handleSubmit = () => {
     if (title.trim() && body.trim()) {
-      dispatch({
-        type: CREATE_POST_START,
-        payload: { title, body, userId: 1 }, // JSONPlaceholder accepts userId
-      });
+      dispatch(createPostStart({ title, body, userId: 1 }));
       handleClose();
       setTitle("");
       setBody("");
