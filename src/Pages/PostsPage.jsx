@@ -1,16 +1,38 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchPostsStart } from "../Reducers/post.reducer";
-import { selectPostList, selectPostLoading } from "../Selectors/post.selector";
+import {
+  selectPostList,
+  selectPostLoading,
+  selectDeletedId,
+} from "../Selectors/post.selector";
 import { DataGrid } from "@mui/x-data-grid";
-import { Container, Typography, Button } from "@mui/material";
+import { Container, Typography, Button, Snackbar } from "@mui/material";
+import MuiAlert from "@mui/material/Alert";
 import { useNavigate } from "react-router-dom";
+import PostForm from "../components/PostForm";
 
 export default function PostsPage() {
   const dispatch = useDispatch();
-  const navigate = useNavigate(); // ✅ Moved inside the function
+  const navigate = useNavigate();
   const rows = useSelector(selectPostList);
   const loading = useSelector(selectPostLoading);
+  const deletedId = useSelector(selectDeletedId); // ✅ from Redux
+
+  const [open, setOpen] = React.useState(false);
+  const [snackbarOpen, setSnackbarOpen] = React.useState(false);
+
+  // ✅ Show snackbar when deletedId changes
+  useEffect(() => {
+    if (deletedId !== null) {
+      setSnackbarOpen(true);
+    }
+  }, [deletedId]);
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+    dispatch({ type: "CLEAR_DELETED_ID" }); // ✅ clear after showing
+  };
 
   const columns = [
     { field: "id", headerName: "ID", width: 90 },
@@ -19,15 +41,28 @@ export default function PostsPage() {
     {
       field: "actions",
       headerName: "Actions",
-      width: 150,
+      width: 220,
       renderCell: (params) => (
-        <Button
-          variant="outlined"
-          size="small"
-          onClick={() => navigate(`/posts/${params.row.id}`)}
-        >
-          View
-        </Button>
+        <>
+          <Button
+            variant="outlined"
+            size="small"
+            onClick={() => navigate(`/posts/${params.row.id}`)}
+            sx={{ mr: 1 }}
+          >
+            View
+          </Button>
+          <Button
+            variant="outlined"
+            color="error"
+            size="small"
+            onClick={() =>
+              dispatch({ type: "DELETE_POST_START", payload: params.row.id })
+            }
+          >
+            Delete
+          </Button>
+        </>
       ),
     },
   ];
@@ -38,9 +73,20 @@ export default function PostsPage() {
 
   return (
     <Container>
+      <Button
+        variant="contained"
+        sx={{ mb: 2 }}
+        onClick={() => setOpen(true)}
+      >
+        Create Post
+      </Button>
+
+      <PostForm open={open} handleClose={() => setOpen(false)} />
+
       <Typography variant="h4" gutterBottom>
         Posts
       </Typography>
+
       <div style={{ height: 500, width: "100%" }}>
         <DataGrid
           rows={rows}
@@ -51,6 +97,23 @@ export default function PostsPage() {
           getRowId={(row) => row.id}
         />
       </div>
+
+      {/* ✅ Snackbar */}
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={3000}
+        onClose={handleSnackbarClose}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <MuiAlert
+          elevation={6}
+          variant="filled"
+          severity="success"
+          onClose={handleSnackbarClose}
+        >
+          Post #{deletedId} deleted successfully
+        </MuiAlert>
+      </Snackbar>
     </Container>
   );
 }

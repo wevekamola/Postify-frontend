@@ -1,9 +1,15 @@
 import { call, put, takeLatest } from "redux-saga/effects";
 import axios from "axios";
 import {
-  FETCH_POSTS_START,
-  FETCH_POSTS_SUCCESS,
-  FETCH_POSTS_FAILURE,
+  fetchPostsStart,
+  fetchPostsSuccess,
+  fetchPostsFailure,
+  createPostStart,
+  createPostSuccess,
+  createPostFailure,
+  deletePostStart,
+  deletePostSuccess,
+  deletePostFailure,
 } from "../Reducers/post.reducer";
 
 function* fetchPostsWorker() {
@@ -11,14 +17,41 @@ function* fetchPostsWorker() {
     const response = yield call(() =>
       axios.get("https://jsonplaceholder.typicode.com/posts")
     );
-    yield put({ type: FETCH_POSTS_SUCCESS, payload: response.data });
+    yield put(fetchPostsSuccess(response.data));
   } catch (error) {
-    yield put({ type: FETCH_POSTS_FAILURE, payload: error.message });
+    yield put(fetchPostsFailure(error.message));
+  }
+}
+
+function* createPostWorker(action) {
+  try {
+    const response = yield call(() =>
+      axios.post("https://jsonplaceholder.typicode.com/posts", action.payload)
+    );
+    yield put(createPostSuccess(response.data));
+  } catch (error) {
+    yield put(createPostFailure(error.message));
+  }
+}
+
+function* deletePostWorker(action) {
+  try {
+    const postId = action.payload;
+    yield call(() =>
+      fetch(`https://jsonplaceholder.typicode.com/posts/${postId}`, {
+        method: "DELETE",
+      })
+    );
+    yield put(deletePostSuccess(postId));
+  } catch (error) {
+    yield put(deletePostFailure(error.message));
   }
 }
 
 function* postSaga() {
-  yield takeLatest(FETCH_POSTS_START, fetchPostsWorker);
+  yield takeLatest(fetchPostsStart.type, fetchPostsWorker);
+  yield takeLatest(createPostStart.type, createPostWorker);
+  yield takeLatest(deletePostStart.type, deletePostWorker);
 }
 
 export default postSaga;

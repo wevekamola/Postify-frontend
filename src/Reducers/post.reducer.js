@@ -1,27 +1,59 @@
+import { createSlice } from "@reduxjs/toolkit";
+
 const initialState = {
-    loading: false,
-    data: [],
-    error: null,
-  };
-  
-  export const FETCH_POSTS_START = "FETCH_POSTS_START";
-  export const FETCH_POSTS_SUCCESS = "FETCH_POSTS_SUCCESS";
-  export const FETCH_POSTS_FAILURE = "FETCH_POSTS_FAILURE";
-  
-  const postReducer = (state = initialState, action) => {
-    switch (action.type) {
-      case FETCH_POSTS_START:
-        return { ...state, loading: true };
-      case FETCH_POSTS_SUCCESS:
-        return { ...state, loading: false, data: action.payload };
-      case FETCH_POSTS_FAILURE:
-        return { ...state, loading: false, error: action.payload };
-      default:
-        return state;
-    }
-  };
-  
-  export const fetchPostsStart = () => ({ type: FETCH_POSTS_START });
-  
-  export default postReducer;
-  
+  loading: false,
+  deletedId: null,
+  data: [],
+  error: null,
+};
+
+const postSlice = createSlice({
+  name: "posts",
+  initialState,
+  reducers: {
+    fetchPostsStart(state) {
+      state.loading = true;
+    },
+    fetchPostsSuccess(state, action) {
+      state.loading = false;
+      state.data = action.payload;
+    },
+    fetchPostsFailure(state, action) {
+      state.loading = false;
+      state.error = action.payload;
+    },
+    createPostStart() {}, // Handled by saga
+    createPostSuccess(state, action) {
+      state.data.unshift(action.payload);
+    },
+    createPostFailure(state, action) {
+      state.error = action.payload;
+    },
+    deletePostStart() {}, // Handled by saga
+    deletePostSuccess(state, action) {
+      state.data = state.data.filter((post) => post.id !== action.payload);
+      state.deletedId = action.payload;
+    },
+    deletePostFailure(state, action) {
+      state.error = action.payload;
+    },
+    clearDeletedId(state) {
+      state.deletedId = null;
+    },
+  },
+});
+
+export const {
+  fetchPostsStart,
+  fetchPostsSuccess,
+  fetchPostsFailure,
+  createPostStart,
+  createPostSuccess,
+  createPostFailure,
+  deletePostStart,
+  deletePostSuccess,
+  deletePostFailure,
+  clearDeletedId,
+} = postSlice.actions;
+
+export default postSlice.reducer;
