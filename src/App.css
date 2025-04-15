@@ -3,6 +3,7 @@
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  background: "linear-gradient(hsl(210, 24%, 11%) 90%, hsla(210, 100%, 23%, 0.2) 100%)",
 }
 
 body{

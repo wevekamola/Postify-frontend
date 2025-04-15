@@ -2,7 +2,7 @@ import { createTheme } from "@mui/material/styles";
 
 const theme = createTheme({
   palette: {
-    mode: "dark", // or 'light'
+    mode: "dark",
     primary: {
       main: "#1976d2",
     },
@@ -21,6 +21,17 @@ const theme = createTheme({
     button: {
       textTransform: "none",
       fontWeight: 600,
+    },
+  },
+  components: {
+    MuiCssBaseline: {
+      styleOverrides: {
+        body: {
+          margin: 0,
+          padding: 0,
+          background: "linear-gradient(hsl(210, 24%, 9%) 100%, hsla(210, 100%, 23%, 0.2) 100%)",
+        },
+      },
     },
   },
 });
