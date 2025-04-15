@@ -12,6 +12,7 @@ import MyProfilePage from "./pages/MyProfilePage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import GuestRoute from "./components/GuestRoute";
 import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
 
 function AppLayout() {
   const location = useLocation();
@@ -75,6 +76,7 @@ function App() {
       <BrowserRouter>
         <AppLayout />
       </BrowserRouter>
+      <Footer />
     </ThemeProvider>
   );
 }

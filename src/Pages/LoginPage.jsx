@@ -16,7 +16,7 @@ import {
   } from "../Reducers/auth.reducer";
 
 const Background = styled("div")(() => ({
-  minHeight: "100vh",
+  minHeight: "90vh",
   display: "flex",
   flexDirection: "column",
   alignItems: "center",

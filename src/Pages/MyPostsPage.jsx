@@ -80,7 +80,7 @@ export default function MyPostsPage() {
   ];
 
   return (
-    <Container style={{maxWidth: "90%" }}>
+    <Container style={{maxWidth: "90%", marginBottom:60 }}>
       <Box display="flex" justifyContent="space-between" alignItems="center" sx={{ mt:5, mb:1 }}>
         <Typography variant="h4" sx={{ cursor: "pointer", fontWeight: 400 }} gutterBottom>
             My Posts

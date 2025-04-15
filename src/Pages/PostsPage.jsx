@@ -52,7 +52,7 @@ export default function PostsPage() {
   ];
   
   return (
-    <Container style={{maxWidth: "90%" }}>
+    <Container style={{maxWidth: "90%", marginBottom:60 }}>
       <Typography variant="h4" sx={{ mt:5, mb:2, cursor: "pointer", fontWeight: 400 }} gutterBottom>
         All Posts
       </Typography>

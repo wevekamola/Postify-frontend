@@ -75,7 +75,7 @@ export default function PostDetailsPage() {
   const handleUpdate = () => setUpdateSuccess(true);
 
   return (
-    <Container maxWidth="lg" sx={{ mt: 4 }}>
+    <Container maxWidth="lg" sx={{ mt: 4, mb:6 }}>
       <Box
         display="flex"
         flexDirection={isMobile ? "column" : "row"}
