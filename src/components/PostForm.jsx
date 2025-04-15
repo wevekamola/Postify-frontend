@@ -12,31 +12,25 @@ import { createPostStart } from "../Reducers/post.reducer";
 
 export default function PostForm({ open, handleClose }) {
   const dispatch = useDispatch();
-  const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
 
   const handleSubmit = () => {
-    if (title.trim() && body.trim()) {
-      dispatch(createPostStart({ title, body, userId: 1 }));
+    if (body.trim()) {
+      dispatch(createPostStart({ body, userId: 1 }));
       handleClose();
-      setTitle("");
       setBody("");
     }
   };
 
   return (
-    <Dialog open={open} onClose={handleClose}>
+    <Dialog open={open} onClose={handleClose} PaperProps={{
+      sx: {
+        width: { xs: "70%", sm: "40%" },
+        maxWidth: "none", // override default maxWidth
+      },
+    }}>
       <DialogTitle>Create New Post</DialogTitle>
       <DialogContent>
-        <TextField
-          autoFocus
-          margin="dense"
-          label="Title"
-          fullWidth
-          variant="standard"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
         <TextField
           margin="dense"
           label="Body"
