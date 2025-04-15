@@ -51,13 +51,13 @@ export default function PostsPage() {
   ];
   
   return (
-    <Container>
-
-      <Typography variant="h4" gutterBottom>
+    <Container style={{maxidth: "90%" }}>
+      <Typography variant="h4" 
+          sx={{ mt:5, mb:2, cursor: "pointer", fontWeight: 400 }} gutterBottom>
         All Posts
       </Typography>
 
-      <div style={{ height: 500, width: "100%" }}>
+      <div style={{ height: 450, width: "100%" }}>
         <DataGrid
           rows={otherPosts}
           columns={columns}
