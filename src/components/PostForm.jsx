@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { createPostStart } from "../Reducers/post.reducer";
+import { InputStyle } from "../theme/customStyles";
 
 export default function PostForm({ open, handleClose }) {
   const dispatch = useDispatch();
@@ -31,16 +32,18 @@ export default function PostForm({ open, handleClose }) {
     }}>
       <DialogTitle>Create New Post</DialogTitle>
       <DialogContent>
-        <TextField
-          margin="dense"
-          label="Body"
-          fullWidth
-          variant="standard"
-          multiline
-          rows={4}
-          value={body}
-          onChange={(e) => setBody(e.target.value)}
-        />
+      <TextField
+        margin="dense"
+        label="Body"
+        fullWidth
+        variant="standard"
+        multiline
+        rows={4}
+        value={body}
+        onChange={(e) => setBody(e.target.value)}
+        sx={InputStyle}
+      />
+
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Cancel</Button>
