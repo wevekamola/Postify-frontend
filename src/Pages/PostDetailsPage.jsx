@@ -1,16 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  selectSelectedPost,
-  selectSelectedPostLoading,
-} from "../Selectors/post.selector";
 import { fetchPostByIdStart } from "../Reducers/post.reducer";
-import {
-  selectCommentsByPostId,
-  selectCommentsLoading,
-} from "../Selectors/comment.selector";
 import { fetchCommentsStart } from "../Reducers/comment.reducer";
+import { selectSelectedPost, selectSelectedPostLoading } from "../Selectors/post.selector";
+import { selectUserMeta, selectCurrentUser } from "../Selectors/auth.selector";
+import { selectCommentsByPostId, selectCommentsLoading } from "../Selectors/comment.selector";
 
 import {
   Container,
@@ -39,8 +34,8 @@ export default function PostDetailsPage() {
   const dispatch = useDispatch();
   const post = useSelector(selectSelectedPost);
   const postLoading = useSelector(selectSelectedPostLoading);
-  const users = useSelector((state) => state.auth.users);
-  const currentUser = useSelector((state) => state.auth.currentUser);
+  const currentUser = useSelector(selectCurrentUser);
+  const userMeta = useSelector(selectUserMeta);
   const comments = useSelector((state) => selectCommentsByPostId(state, postId));
   const commentLoading = useSelector(selectCommentsLoading);
 
@@ -73,7 +68,7 @@ export default function PostDetailsPage() {
     );
   }
 
-  const author = users.find((u) => u.id === post.userId);
+  const author = userMeta.find((u) => u.id === post.userId);
   const isOwner = currentUser?.id === post.userId;
   const avatarColors = [deepPurple[500], deepOrange[500], teal[500]];
 

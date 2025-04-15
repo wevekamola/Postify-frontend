@@ -1,55 +1,56 @@
-import { call, put, takeLatest, select } from "redux-saga/effects";
+import { call, put, takeLatest, all } from "redux-saga/effects";
 import axios from "axios";
 import {
-  fetchUsersStart,
+  loginStart,
   fetchUsersSuccess,
   fetchUsersFailure,
-  loginStart,
-  loginSuccess,
-  loginFailure,
+  fetchUserMetaStart,
+  fetchUserMetaSuccess,
+  fetchUserMetaFailure,
 } from "../Reducers/auth.reducer";
 
-// Worker: Fetch all users from JSONPlaceholder
-function* fetchUsersWorker() {
-  try {
-    const response = yield call(() =>
-      axios.get("https://jsonplaceholder.typicode.com/users")
-    );
-    yield put(fetchUsersSuccess(response.data));
-  } catch (error) {
-    yield put(fetchUsersFailure(error.message));
-  }
-}
-
-// Worker: Login (match email and password)
+// Login worker
 function* loginWorker(action) {
   try {
     const { email, password } = action.payload;
-    const users = yield select((state) => state.auth.users);
-
-    const user = users.find((u) => u.email === email);
+    const res = yield call(axios.get, `https://jsonplaceholder.typicode.com/users?email=${email}`);
+    const user = res.data[0];
 
     if (!user) {
-      yield put(loginFailure("User not found."));
+      yield put(fetchUsersFailure("User not found"));
       return;
     }
 
     if (password !== "1234") {
-      yield put(loginFailure("Incorrect password."));
+      yield put(fetchUsersFailure("Invalid password"));
       return;
     }
 
-    yield put(loginSuccess(user));
-    localStorage.setItem("user", JSON.stringify(user));
+    yield put(fetchUsersSuccess(user));
+    localStorage.setItem("currentUser", JSON.stringify(user));
   } catch (error) {
-    yield put(loginFailure("Something went wrong."));
+    yield put(fetchUsersFailure("Login failed"));
   }
 }
 
-// Watchers
-function* authSaga() {
-  yield takeLatest(fetchUsersStart.type, fetchUsersWorker);
-  yield takeLatest(loginStart.type, loginWorker);
+// UserMeta worker
+function* fetchUserMetaWorker() {
+  try {
+    const res = yield call(axios.get, `https://jsonplaceholder.typicode.com/users`);
+    const meta = res.data.map((u) => ({
+      id: u.id,
+      name: u.name,
+      email: u.email,
+    }));
+    yield put(fetchUserMetaSuccess(meta));
+  } catch (error) {
+    yield put(fetchUserMetaFailure("Failed to load user metadata"));
+  }
 }
 
-export default authSaga;
+export default function* authSaga() {
+  yield all([
+    takeLatest(loginStart.type, loginWorker),
+    takeLatest(fetchUserMetaStart.type, fetchUserMetaWorker),
+  ]);
+}

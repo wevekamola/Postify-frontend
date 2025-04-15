@@ -1,15 +1,9 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  fetchPostsStart,
-  deletePostStart,
-  clearDeletedId,
-} from "../Reducers/post.reducer";
-import {
-  selectPostList,
-  selectPostLoading,
-  selectDeletedId,
-} from "../Selectors/post.selector";
+import { fetchPostsStart, deletePostStart, clearDeletedId } from "../Reducers/post.reducer";
+import { fetchUserMetaStart } from "../Reducers/auth.reducer";
+import { selectPostList, selectPostLoading, selectDeletedId } from "../Selectors/post.selector";
+import { selectUserMeta, selectCurrentUser } from "../Selectors/auth.selector";
 import { DataGrid } from "@mui/x-data-grid";
 import { Container, Typography, Button, Snackbar } from "@mui/material";
 import MuiAlert from "@mui/material/Alert";
@@ -24,8 +18,8 @@ export default function MyPostsPage() {
   const deletedId = useSelector(selectDeletedId);
 
   const allPosts = useSelector(selectPostList);
-  const users = useSelector((state) => state.auth.users);
-  const currentUser = useSelector((state) => state.auth.currentUser);
+  const currentUser = useSelector(selectCurrentUser);
+  const userMeta = useSelector(selectUserMeta);
 
   const [open, setOpen] = React.useState(false);
   const [snackbarOpen, setSnackbarOpen] = React.useState(false);
@@ -33,6 +27,12 @@ export default function MyPostsPage() {
   useEffect(() => {
     dispatch(fetchPostsStart());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (userMeta.length === 0) {
+      dispatch(fetchUserMetaStart());
+    }
+  }, [userMeta.length, dispatch]);
 
   useEffect(() => {
     if (deletedId !== null) {
@@ -45,7 +45,7 @@ export default function MyPostsPage() {
     dispatch(clearDeletedId());
   };
 
-  const { myPosts } = categorizePosts(allPosts, users, currentUser?.id);
+  const { myPosts } = categorizePosts(allPosts, userMeta, currentUser?.id);
 
   const columns = [
     { field: "id", headerName: "ID", width: 90 },

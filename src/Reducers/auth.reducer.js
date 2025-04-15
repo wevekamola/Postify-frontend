@@ -1,10 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const storedUser = localStorage.getItem("user");
-
 const initialState = {
-  users: [],
-  currentUser: storedUser ? JSON.parse(storedUser) : null,
+  currentUser: JSON.parse(localStorage.getItem("currentUser")) || null,
+  userMeta: [],
   loading: false,
   error: null,
 };
@@ -13,43 +11,45 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    fetchUsersStart(state) {
+    loginStart(state, action) {
       state.loading = true;
+      state.error = null;
     },
     fetchUsersSuccess(state, action) {
       state.loading = false;
-      state.users = action.payload;
+      state.currentUser = action.payload;
     },
     fetchUsersFailure(state, action) {
       state.loading = false;
       state.error = action.payload;
     },
-    loginStart(state) {
+    fetchUserMetaStart(state) {
       state.loading = true;
       state.error = null;
     },
-    loginSuccess(state, action) {
+    fetchUserMetaSuccess(state, action) {
       state.loading = false;
-      state.currentUser = action.payload;
+      state.userMeta = action.payload;
     },
-    loginFailure(state, action) {
+    fetchUserMetaFailure(state, action) {
       state.loading = false;
       state.error = action.payload;
     },
     logout(state) {
       state.currentUser = null;
-      localStorage.removeItem("user");
+      state.userMeta = [];
+      localStorage.removeItem("currentUser");
     },
   },
 });
 
 export const {
-  fetchUsersStart,
+  loginStart,
   fetchUsersSuccess,
   fetchUsersFailure,
-  loginStart,
-  loginSuccess,
-  loginFailure,
+  fetchUserMetaStart,
+  fetchUserMetaSuccess,
+  fetchUserMetaFailure,
   logout,
 } = authSlice.actions;
 

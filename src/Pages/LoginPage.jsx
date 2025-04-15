@@ -11,7 +11,7 @@ import {
 import { styled } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
 import {
-    fetchUsersStart,
+    // fetchUsersStart,
     loginStart,
   } from "../Reducers/auth.reducer";
 
@@ -60,13 +60,13 @@ const CustomInput = styled(TextField)(() => ({
 
 export default function LoginPage() {
     const dispatch = useDispatch();
-    const { loading, error } = useSelector((state) => state.auth);
+    // const { loading, error } = useSelector((state) => state.auth);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
   
-    useEffect(() => {
-      dispatch(fetchUsersStart());
-    }, [dispatch]);
+    // useEffect(() => {
+    //   dispatch(fetchUsersStart());
+    // }, [dispatch]);
   
     const handleLogin = () => {
       if (!email || !password) return;
@@ -121,7 +121,7 @@ export default function LoginPage() {
             color="primary"
             fullWidth
             onClick={handleLogin}
-            disabled={loading}
+            // disabled={loading}
             sx={{
               textTransform: "none",
               fontWeight: 600,
