@@ -10,6 +10,9 @@ import {
   deletePostStart,
   deletePostSuccess,
   deletePostFailure,
+  fetchPostByIdStart,
+  fetchPostByIdSuccess,
+  fetchPostByIdFailure,
 } from "../Reducers/post.reducer";
 
 function* fetchPostsWorker() {
@@ -48,10 +51,20 @@ function* deletePostWorker(action) {
   }
 }
 
+function* fetchPostByIdWorker(action) {
+  try {
+    const response = yield call(axios.get, `https://jsonplaceholder.typicode.com/posts/${action.payload}`);
+    yield put(fetchPostByIdSuccess(response.data));
+  } catch (error) {
+    yield put(fetchPostByIdFailure(error.message));
+  }
+}
+
 function* postSaga() {
   yield takeLatest(fetchPostsStart.type, fetchPostsWorker);
   yield takeLatest(createPostStart.type, createPostWorker);
   yield takeLatest(deletePostStart.type, deletePostWorker);
+  yield takeLatest(fetchPostByIdStart.type, fetchPostByIdWorker);
 }
 
 export default postSaga;

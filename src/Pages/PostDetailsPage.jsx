@@ -1,12 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { selectPostList } from "../Selectors/post.selector";
+import {
+  selectSelectedPost,
+  selectSelectedPostLoading,
+} from "../Selectors/post.selector";
+import { fetchPostByIdStart } from "../Reducers/post.reducer";
 import {
   selectCommentsByPostId,
   selectCommentsLoading,
 } from "../Selectors/comment.selector";
 import { fetchCommentsStart } from "../Reducers/comment.reducer";
+
 import {
   Container,
   Typography,
@@ -30,18 +35,15 @@ import { deepPurple, deepOrange, teal } from "@mui/material/colors";
 
 export default function PostDetailsPage() {
   const { id } = useParams();
-  const dispatch = useDispatch();
   const postId = parseInt(id);
-
-  const posts = useSelector(selectPostList);
+  const dispatch = useDispatch();
+  const post = useSelector(selectSelectedPost);
+  const postLoading = useSelector(selectSelectedPostLoading);
   const users = useSelector((state) => state.auth.users);
   const currentUser = useSelector((state) => state.auth.currentUser);
-
-  const post = posts.find((p) => p.id === postId);
   const comments = useSelector((state) => selectCommentsByPostId(state, postId));
-  const loading = useSelector(selectCommentsLoading);
+  const commentLoading = useSelector(selectCommentsLoading);
 
-  const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [updateSuccess, setUpdateSuccess] = useState(false);
 
@@ -49,17 +51,27 @@ export default function PostDetailsPage() {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   useEffect(() => {
-    if (postId) dispatch(fetchCommentsStart(postId));
+    if (postId) {
+      dispatch(fetchPostByIdStart(postId));
+      dispatch(fetchCommentsStart(postId));
+    }
   }, [postId, dispatch]);
 
   useEffect(() => {
     if (post) {
-      setTitle(post.title);
       setBody(post.body);
     }
   }, [post]);
 
-  if (!post) return <Typography>Post not found</Typography>;
+  if (postLoading || (!post && !postLoading)) {
+    return (
+      <Container sx={{ mt: 4 }}>
+        <Box display="flex" justifyContent="center">
+          {postLoading ? <CircularProgress /> : <Typography>Post not found.</Typography>}
+        </Box>
+      </Container>
+    );
+  }
 
   const author = users.find((u) => u.id === post.userId);
   const isOwner = currentUser?.id === post.userId;
@@ -82,8 +94,8 @@ export default function PostDetailsPage() {
             p: 3,
             flex: 1,
             minWidth: 0,
-            borderTopRightRadius:0,
-            borderBottomRightRadius:0,
+            borderTopRightRadius: 0,
+            borderBottomRightRadius: 0,
             minHeight: 500,
             display: "flex",
             flexDirection: "column",
@@ -142,8 +154,8 @@ export default function PostDetailsPage() {
             flex: 1,
             minWidth: 0,
             maxHeight: 500,
-            borderTopLeftRadius:0,
-            borderBottomLeftRadius:0,
+            borderTopLeftRadius: 0,
+            borderBottomLeftRadius: 0,
             overflowY: "auto",
             display: "flex",
             flexDirection: "column",
@@ -153,7 +165,7 @@ export default function PostDetailsPage() {
             Comments
           </Typography>
 
-          {loading ? (
+          {commentLoading ? (
             <Box display="flex" justifyContent="center" py={4}>
               <CircularProgress />
             </Box>
@@ -175,7 +187,7 @@ export default function PostDetailsPage() {
                   <ListItemText
                     primary={
                       <>
-                        <Typography variant="subtitle1" sx={{fontWeight: 400 }}>
+                        <Typography variant="subtitle1" sx={{ fontWeight: 400 }}>
                           {comment.email}
                         </Typography>
                       </>
@@ -191,14 +203,14 @@ export default function PostDetailsPage() {
 
       {/* Snackbar Notification */}
       <Snackbar
-      sx={{bottom:"20px"}}
+        sx={{ bottom: "20px" }}
         open={updateSuccess}
         autoHideDuration={4000}
         onClose={() => setUpdateSuccess(false)}
         anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
       >
         <Alert severity="success" onClose={() => setUpdateSuccess(false)}>
-          Post updated succesfully!
+          Post updated successfully!
         </Alert>
       </Snackbar>
     </Container>

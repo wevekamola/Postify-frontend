@@ -5,6 +5,9 @@ const initialState = {
   deletedId: null,
   data: [],
   error: null,
+  selectedPost: null,
+  loadingSelectedPost: false,
+  errorSelectedPost: null,
 };
 
 const postSlice = createSlice({
@@ -40,6 +43,18 @@ const postSlice = createSlice({
     clearDeletedId(state) {
       state.deletedId = null;
     },
+    fetchPostByIdStart(state) {
+      state.loadingSelectedPost = true;
+      state.selectedPost = null;
+    },
+    fetchPostByIdSuccess(state, action) {
+      state.loadingSelectedPost = false;
+      state.selectedPost = action.payload;
+    },
+    fetchPostByIdFailure(state, action) {
+      state.loadingSelectedPost = false;
+      state.errorSelectedPost = action.payload;
+    },
   },
 });
 
@@ -54,6 +69,9 @@ export const {
   deletePostSuccess,
   deletePostFailure,
   clearDeletedId,
+  fetchPostByIdStart,
+  fetchPostByIdSuccess,
+  fetchPostByIdFailure,
 } = postSlice.actions;
 
 export default postSlice.reducer;
