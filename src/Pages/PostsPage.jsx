@@ -34,11 +34,11 @@ export default function PostsPage() {
     { field: "id", headerName: "ID", width: 90 },
     { field: "userName", headerName: "User Name", width: 200 },
     { field: "userEmail", headerName: "EmailID", width: 250 },
-    { field: "body", headerName: "Post", width: 500 },
+    { field: "body", headerName: "Post", width: 600 },
     {
       field: "actions",
       headerName: "Actions",
-      width: 120,
+      width: 150,
       renderCell: (params) => (
         <Button
           variant="outlined"
@@ -52,9 +52,8 @@ export default function PostsPage() {
   ];
   
   return (
-    <Container style={{maxidth: "90%" }}>
-      <Typography variant="h4" 
-          sx={{ mt:5, mb:2, cursor: "pointer", fontWeight: 400 }} gutterBottom>
+    <Container style={{maxWidth: "90%" }}>
+      <Typography variant="h4" sx={{ mt:5, mb:2, cursor: "pointer", fontWeight: 400 }} gutterBottom>
         All Posts
       </Typography>
 

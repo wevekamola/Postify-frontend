@@ -5,7 +5,7 @@ import { fetchUserMetaStart } from "../Reducers/auth.reducer";
 import { selectPostList, selectPostLoading, selectDeletedId } from "../Selectors/post.selector";
 import { selectUserMeta, selectCurrentUser } from "../Selectors/auth.selector";
 import { DataGrid } from "@mui/x-data-grid";
-import { Container, Typography, Button, Snackbar } from "@mui/material";
+import { Container, Box, Typography, Button, Snackbar } from "@mui/material";
 import MuiAlert from "@mui/material/Alert";
 import { useNavigate } from "react-router-dom";
 import PostForm from "../components/PostForm";
@@ -51,11 +51,11 @@ export default function MyPostsPage() {
     { field: "id", headerName: "ID", width: 90 },
     { field: "userName", headerName: "User Name", width: 200 },
     { field: "userEmail", headerName: "EmailID", width: 250 },
-    { field: "body", headerName: "Post", width: 500 },
+    { field: "body", headerName: "Post", width: 550 },
     {
       field: "actions",
       headerName: "Actions",
-      width: 220,
+      width: 200,
       renderCell: (params) => (
         <>
           <Button
@@ -80,22 +80,17 @@ export default function MyPostsPage() {
   ];
 
   return (
-    <Container>
-      <Button
-        variant="contained"
-        sx={{ mb: 2 }}
-        onClick={() => setOpen(true)}
-      >
-        Create Post
-      </Button>
-
+    <Container style={{maxWidth: "90%" }}>
+      <Box display="flex" justifyContent="space-between" alignItems="center" sx={{ mt:5, mb:1 }}>
+        <Typography variant="h4" sx={{ cursor: "pointer", fontWeight: 400 }} gutterBottom>
+            My Posts
+        </Typography>
+        <Button variant="contained" onClick={() => setOpen(true)}>
+            Create Post
+        </Button>
+      </Box>
       <PostForm open={open} handleClose={() => setOpen(false)} />
-
-      <Typography variant="h4" gutterBottom>
-        My Posts
-      </Typography>
-
-      <div style={{ height: 500, width: "100%" }}>
+      <div style={{ height: 450, width: "100%" }}>
         <DataGrid
           rows={myPosts}
           columns={columns}
@@ -105,7 +100,6 @@ export default function MyPostsPage() {
           getRowId={(row) => row.id}
         />
       </div>
-
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={3000}
