@@ -1,5 +1,5 @@
 import { call, put, takeLatest, all } from "redux-saga/effects";
-import axios from "axios";
+import axiosInstance from "../api/axios";
 import {
   loginStart,
   fetchUsersSuccess,
@@ -13,7 +13,11 @@ import {
 function* loginWorker(action) {
   try {
     const { email, password } = action.payload;
-    const res = yield call(axios.get, `https://jsonplaceholder.typicode.com/users?email=${email}`);
+
+    const res = yield call(() =>
+      axiosInstance.get(`/users?email=${email}`)
+    );
+
     const user = res.data[0];
 
     if (!user) {
@@ -36,12 +40,16 @@ function* loginWorker(action) {
 // UserMeta worker
 function* fetchUserMetaWorker() {
   try {
-    const res = yield call(axios.get, `https://jsonplaceholder.typicode.com/users`);
+    const res = yield call(() =>
+      axiosInstance.get("/users")
+    );
+
     const meta = res.data.map((u) => ({
       id: u.id,
       name: u.name,
       email: u.email,
     }));
+
     yield put(fetchUserMetaSuccess(meta));
   } catch (error) {
     yield put(fetchUserMetaFailure("Failed to load user metadata"));

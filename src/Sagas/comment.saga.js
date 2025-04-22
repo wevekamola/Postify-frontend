@@ -1,5 +1,5 @@
 import { call, put, takeLatest } from "redux-saga/effects";
-import axios from "axios";
+import axiosInstance from "../api/axios";
 import {
   fetchCommentsStart,
   fetchCommentsSuccess,
@@ -10,7 +10,7 @@ function* fetchCommentsWorker(action) {
   try {
     const postId = action.payload;
     const response = yield call(() =>
-      axios.get(`https://jsonplaceholder.typicode.com/posts/${postId}/comments`)
+      axiosInstance.get(`/comments/${postId}`)
     );
     yield put(fetchCommentsSuccess({ postId, comments: response.data }));
   } catch (error) {

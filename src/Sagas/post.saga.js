@@ -1,5 +1,5 @@
 import { call, put, takeLatest } from "redux-saga/effects";
-import axios from "axios";
+import axiosInstance from "../api/axios";
 import {
   fetchPostsStart,
   fetchPostsSuccess,
@@ -17,9 +17,7 @@ import {
 
 function* fetchPostsWorker() {
   try {
-    const response = yield call(() =>
-      axios.get("https://jsonplaceholder.typicode.com/posts")
-    );
+    const response = yield call(() => axiosInstance.get("/posts"));
     yield put(fetchPostsSuccess(response.data));
   } catch (error) {
     yield put(fetchPostsFailure(error.message));
@@ -29,7 +27,7 @@ function* fetchPostsWorker() {
 function* createPostWorker(action) {
   try {
     const response = yield call(() =>
-      axios.post("https://jsonplaceholder.typicode.com/posts", action.payload)
+      axiosInstance.post("/posts", action.payload)
     );
     yield put(createPostSuccess(response.data));
   } catch (error) {
@@ -40,11 +38,7 @@ function* createPostWorker(action) {
 function* deletePostWorker(action) {
   try {
     const postId = action.payload;
-    yield call(() =>
-      fetch(`https://jsonplaceholder.typicode.com/posts/${postId}`, {
-        method: "DELETE",
-      })
-    );
+    yield call(() => axiosInstance.delete(`/posts/${postId}`));
     yield put(deletePostSuccess(postId));
   } catch (error) {
     yield put(deletePostFailure(error.message));
@@ -53,7 +47,9 @@ function* deletePostWorker(action) {
 
 function* fetchPostByIdWorker(action) {
   try {
-    const response = yield call(axios.get, `https://jsonplaceholder.typicode.com/posts/${action.payload}`);
+    const response = yield call(() =>
+      axiosInstance.get(`/posts/${action.payload}`)
+    );
     yield put(fetchPostByIdSuccess(response.data));
   } catch (error) {
     yield put(fetchPostByIdFailure(error.message));
