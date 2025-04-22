@@ -116,22 +116,6 @@
 
 ---
 
-# 📦 API Reference
-
-All data is fetched from the open-source mock API:
-
-🔗 [https://jsonplaceholder.typicode.com](https://jsonplaceholder.typicode.com)
-
-| Feature   | Endpoint                      |
-|-----------|-------------------------------|
-| Users     | `/users`                      |
-| Posts     | `/posts`, `/posts/:id`        |
-| Comments  | `/posts/:id/comments`         |
-
-> _Note: This is a public mock API. All changes are simulated client-side only and do not persist._
-
----
-
 # 🧪 Testing & Setup
 
 ### ⚙️ Setup Locally
